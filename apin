@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+use 5.010;
+use strict;
+use String::ShellQuote;
+use warnings;
+
+
+# You can do this all in one line, but it's not very clear:
+# my $r = 'su -lc ' . shell_quote( 'aptitude install -P ' . join ' ', @ARGV ) . ' root';
+
+my $cmd = 'aptitude install -P ' . join ' ', @ARGV;
+my $quoted  = shell_quote $cmd;
+my $su_call = 'su -lc ' . $quoted . ' root';
+$su_call =~ s/\s+/\ /g;
+
+say "$su_call";
+
+system "$su_call";
+
+exit 0;
+
