@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ##
 ## https://github.com/dbb
@@ -49,15 +49,16 @@ for a in $available; do
     fi
 done
 
-echo "No binary deb available.  Will try to build $uversion and install it."
-echo "Edit var \$uversion to install another version. Visit $site to see what is available."
-echo
-echo "You need to have debhelper, dpkg-dev and fakeroot installed."
-echo "If not, interrupt now, install them and rerun this script."
-echo
-echo "This is higly experimental; look out for what happens below."
-echo "If you want to stop, interrupt now (control-c), else press"
-echo "return to proceed"
+echo -e "No binary deb available.  Will try to build $uversion and install it.\nEdit var \$uversion to install another version. Visit $site to see what is available.\n"
+
+for pkg in debhelper dpkg-dev fakeroot; do
+    if [[ -n $( apt-cache policy $pkg | grep '(none)' ) ]]; then
+        echo "ERROR: you need to install $pkg"
+        exit 1
+    fi
+done
+echo -e "This is higly experimental; look out for what happens below.\n
+If you want to stop, interrupt now (Ctrl-c), else press\nreturn to proceed"
 read dum
 
 mkdir -p tmp/dvd
